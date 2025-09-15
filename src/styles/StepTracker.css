@@ -1,0 +1,97 @@
+.step-tracker {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.step-tracker h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  transition: width 0.3s ease;
+}
+
+.step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.step-item.done h3 {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.step-buttons button {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.step-buttons button:hover {
+  opacity: 0.8;
+}
+
+.step-buttons .delete {
+  background: #f88;
+  color: white;
+}
+
+.step-buttons button:not(.delete) {
+  background: #4f46e5;
+  color: white;
+}
+
+.new-step {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.new-step input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.new-step button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #06b6d4;
+  color: white;
+  cursor: pointer;
+}

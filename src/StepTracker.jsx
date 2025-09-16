@@ -110,6 +110,16 @@ export default function EventStepTracker() {
     });
   };
 
+  // Atualizar prazo do evento ou etapa
+  const updateDueDate = async (table, id, date) => {
+    const { data, error } = await supabase
+      .from(table)
+      .update({ due_date: date })
+      .eq("id", id)
+      .select();
+    return { data, error };
+  };
+
   const percentDone = (steps) =>
     steps.length === 0
       ? 0
@@ -123,6 +133,7 @@ export default function EventStepTracker() {
     <div className="step-tracker">
       <h1>Eventos e Etapas</h1>
 
+      {/* Novo evento */}
       <div className="new-step" style={{ marginBottom: "1rem" }}>
         <input
           placeholder="Novo evento"
@@ -132,6 +143,7 @@ export default function EventStepTracker() {
         <button onClick={addEvento}>Adicionar Evento</button>
       </div>
 
+      {/* Listar eventos */}
       {events.map((e) => (
         <div
           key={e.id}
@@ -156,6 +168,29 @@ export default function EventStepTracker() {
             </button>
           </div>
 
+          {/* Prazo do evento */}
+          <div style={{ marginTop: "0.5rem" }}>
+            <label>
+              Prazo:
+              <input
+                type="date"
+                value={e.due_date || ""}
+                onChange={async (ev) => {
+                  const newDate = ev.target.value;
+                  await updateDueDate("events", e.id, newDate);
+                  setEvents((prev) =>
+                    prev.map((evOld) =>
+                      evOld.id === e.id
+                        ? { ...evOld, due_date: newDate }
+                        : evOld
+                    )
+                  );
+                }}
+                style={{ marginLeft: "0.5rem" }}
+              />
+            </label>
+          </div>
+
           {/* Barra de progresso */}
           <div className="progress-bar" style={{ margin: "0.5rem 0" }}>
             <div
@@ -165,10 +200,32 @@ export default function EventStepTracker() {
           </div>
           <small>{percentDone(steps[e.id] || [])}% concluído</small>
 
+          {/* Lista de etapas */}
           <ul className="step-list">
             {(steps[e.id] || []).map((s) => (
               <li key={s.id} className="step-item">
                 <span>{s.titulo}</span>
+
+                {/* Prazo da etapa */}
+                <span style={{ marginLeft: "1rem" }}>
+                  Prazo:
+                  <input
+                    type="date"
+                    value={s.due_date || ""}
+                    onChange={async (ev) => {
+                      const newDate = ev.target.value;
+                      await updateDueDate("steps", s.id, newDate);
+                      setSteps((prev) => ({
+                        ...prev,
+                        [e.id]: prev[e.id].map((st) =>
+                          st.id === s.id ? { ...st, due_date: newDate } : st
+                        ),
+                      }));
+                    }}
+                    style={{ marginLeft: "0.25rem" }}
+                  />
+                </span>
+
                 <span
                   style={{
                     cursor: "pointer",
@@ -181,18 +238,24 @@ export default function EventStepTracker() {
                         ? "#fbbf24"
                         : "#34d399",
                     color: s.status === "Em progresso" ? "#000" : "#fff",
+                    marginLeft: "0.5rem",
                   }}
                   onClick={() => changeStatus(s.id, s.status)}
                 >
                   {s.status}
                 </span>
-                <button className="delete" onClick={() => removeStep(s.id)}>
+                <button
+                  className="delete"
+                  onClick={() => removeStep(s.id)}
+                  style={{ marginLeft: "0.5rem" }}
+                >
                   Remover
                 </button>
               </li>
             ))}
           </ul>
 
+          {/* Nova etapa */}
           <div className="new-step">
             <input
               placeholder="Nova etapa"

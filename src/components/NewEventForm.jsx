@@ -10,7 +10,11 @@ export default function NewEventForm({ events, setEvents }) {
       .from("events")
       .insert([{ titulo: novoEvento.trim() }])
       .select();
-    if (!error && data) setEvents([...events, data[0]]);
+
+    if (!error && data) {
+      setEvents([...events, data[0]]); // Atualiza estado imediatamente
+    }
+
     setNovoEvento("");
   };
 

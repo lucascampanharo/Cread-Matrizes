@@ -12,6 +12,7 @@ export default function NewStepForm({ eventId, setSteps }) {
         { titulo: novoStep.trim(), status: "Não iniciado", event_id: eventId },
       ])
       .select();
+
     if (!error && data) {
       setSteps((prev) => ({
         ...prev,

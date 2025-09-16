@@ -8,7 +8,6 @@ export default function EventStepTracker() {
   const [events, setEvents] = useState([]);
   const [steps, setSteps] = useState({});
 
-  // Carregar dados inicialmente
   useEffect(() => {
     const fetchData = async () => {
       const { data: eventos } = await supabase.from("events").select("*");
@@ -30,7 +29,12 @@ export default function EventStepTracker() {
     <div className="step-tracker">
       <h1>Eventos e Etapas</h1>
       <NewEventForm events={events} setEvents={setEvents} />
-      <EventList events={events} steps={steps} setSteps={setSteps} />
+      <EventList
+        events={events}
+        steps={steps}
+        setSteps={setSteps}
+        setEvents={setEvents}
+      />
     </div>
   );
 }

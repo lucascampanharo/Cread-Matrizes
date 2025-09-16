@@ -2,7 +2,7 @@ import { supabase } from "../supabase";
 import StepItem from "./StepItem";
 import NewStepForm from "./NewStepForm";
 
-export default function EventItem({ event, steps, setSteps }) {
+export default function EventItem({ event, steps, setSteps, setEvents }) {
   const percentDone = (steps) =>
     steps.length === 0
       ? 0
@@ -15,11 +15,14 @@ export default function EventItem({ event, steps, setSteps }) {
   const removeEvento = async () => {
     await supabase.from("steps").delete().eq("event_id", event.id);
     await supabase.from("events").delete().eq("id", event.id);
+
     setSteps((prev) => {
       const copy = { ...prev };
       delete copy[event.id];
       return copy;
     });
+
+    setEvents((prev) => prev.filter((e) => e.id !== event.id));
   };
 
   const updateEventDate = async (newDate) => {
@@ -27,6 +30,9 @@ export default function EventItem({ event, steps, setSteps }) {
       .from("events")
       .update({ due_date: newDate })
       .eq("id", event.id);
+    setEvents((prev) =>
+      prev.map((e) => (e.id === event.id ? { ...e, due_date: newDate } : e))
+    );
   };
 
   return (
@@ -52,7 +58,6 @@ export default function EventItem({ event, steps, setSteps }) {
         </button>
       </div>
 
-      {/* Prazo do evento */}
       <div style={{ marginTop: "0.5rem" }}>
         <label>
           Prazo:
@@ -65,7 +70,6 @@ export default function EventItem({ event, steps, setSteps }) {
         </label>
       </div>
 
-      {/* Barra de progresso */}
       <div className="progress-bar" style={{ margin: "0.5rem 0" }}>
         <div
           className="progress-fill"

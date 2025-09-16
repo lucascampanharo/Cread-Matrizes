@@ -12,14 +12,21 @@ export default function EventItem({ event, steps, setSteps }) {
             100
         );
 
-  const removeEvento = async (eventoId) => {
-    await supabase.from("steps").delete().eq("event_id", eventoId);
-    await supabase.from("events").delete().eq("id", eventoId);
+  const removeEvento = async () => {
+    await supabase.from("steps").delete().eq("event_id", event.id);
+    await supabase.from("events").delete().eq("id", event.id);
     setSteps((prev) => {
       const copy = { ...prev };
-      delete copy[eventoId];
+      delete copy[event.id];
       return copy;
     });
+  };
+
+  const updateEventDate = async (newDate) => {
+    await supabase
+      .from("events")
+      .update({ due_date: newDate })
+      .eq("id", event.id);
   };
 
   return (
@@ -40,7 +47,7 @@ export default function EventItem({ event, steps, setSteps }) {
         }}
       >
         <h2>{event.titulo}</h2>
-        <button className="delete" onClick={() => removeEvento(event.id)}>
+        <button className="delete" onClick={removeEvento}>
           Remover Evento
         </button>
       </div>
@@ -52,13 +59,7 @@ export default function EventItem({ event, steps, setSteps }) {
           <input
             type="date"
             value={event.due_date || ""}
-            onChange={async (ev) => {
-              const newDate = ev.target.value;
-              await supabase
-                .from("events")
-                .update({ due_date: newDate })
-                .eq("id", event.id);
-            }}
+            onChange={(ev) => updateEventDate(ev.target.value)}
             style={{ marginLeft: "0.5rem" }}
           />
         </label>
@@ -73,7 +74,6 @@ export default function EventItem({ event, steps, setSteps }) {
       </div>
       <small>{percentDone(steps)}% concluído</small>
 
-      {/* Lista de etapas */}
       <ul className="step-list">
         {steps.map((s) => (
           <StepItem
@@ -85,7 +85,6 @@ export default function EventItem({ event, steps, setSteps }) {
         ))}
       </ul>
 
-      {/* Formulário de nova etapa */}
       <NewStepForm eventId={event.id} setSteps={setSteps} />
     </div>
   );

@@ -1,93 +1,113 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "./supabase";
 import "./styles/StepTracker.css";
 
 const STATUS = ["Não iniciado", "Em progresso", "Finalizado"];
 
 export default function EventStepTracker() {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      titulo: "Criação de Vídeo",
-      steps: [
-        { id: 1, titulo: "Gravação", status: "Não iniciado" },
-        { id: 2, titulo: "Edição", status: "Não iniciado" },
-      ],
-    },
-  ]);
-
+  const [events, setEvents] = useState([]);
+  const [steps, setSteps] = useState({});
   const [novoEvento, setNovoEvento] = useState("");
   const [novoStep, setNovoStep] = useState("");
 
-  // Criar novo evento
-  const addEvento = () => {
-    if (!novoEvento.trim()) return;
-    const evento = {
-      id: Date.now(),
-      titulo: novoEvento.trim(),
-      steps: [],
+  // Carregar eventos e etapas do Supabase
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: eventos } = await supabase.from("events").select("*");
+      setEvents(eventos || []);
+
+      const { data: etapas } = await supabase.from("steps").select("*");
+      if (etapas) {
+        const agrupadas = etapas.reduce((acc, s) => {
+          acc[s.event_id] = acc[s.event_id] ? [...acc[s.event_id], s] : [s];
+          return acc;
+        }, {});
+        setSteps(agrupadas);
+      }
     };
-    setEvents((prev) => [...prev, evento]);
+
+    fetchData();
+  }, []);
+
+  // Criar novo evento
+  const addEvento = async () => {
+    if (!novoEvento.trim()) return;
+    const { data, error } = await supabase
+      .from("events")
+      .insert([{ titulo: novoEvento.trim() }])
+      .select();
+    if (!error && data) {
+      setEvents((prev) => [...prev, data[0]]);
+    }
     setNovoEvento("");
   };
 
   // Criar nova etapa dentro do evento
-  const addStep = (eventoId) => {
+  const addStep = async (eventoId) => {
     if (!novoStep.trim()) return;
-    setEvents((prev) =>
-      prev.map((e) =>
-        e.id === eventoId
-          ? {
-              ...e,
-              steps: [
-                ...e.steps,
-                {
-                  id: Date.now(),
-                  titulo: novoStep.trim(),
-                  status: "Não iniciado",
-                },
-              ],
-            }
-          : e
-      )
-    );
+    const { data, error } = await supabase
+      .from("steps")
+      .insert([
+        { titulo: novoStep.trim(), status: "Não iniciado", event_id: eventoId },
+      ])
+      .select();
+    if (!error && data) {
+      setSteps((prev) => ({
+        ...prev,
+        [eventoId]: [...(prev[eventoId] || []), data[0]],
+      }));
+    }
     setNovoStep("");
   };
 
   // Atualizar status da etapa
-  const changeStatus = (eventoId, stepId) => {
-    setEvents((prev) =>
-      prev.map((e) =>
-        e.id === eventoId
-          ? {
-              ...e,
-              steps: e.steps.map((s) => {
-                if (s.id === stepId) {
-                  const idx = STATUS.indexOf(s.status);
-                  const next = (idx + 1) % STATUS.length;
-                  return { ...s, status: STATUS[next] };
-                }
-                return s;
-              }),
-            }
-          : e
-      )
-    );
+  const changeStatus = async (stepId, currentStatus) => {
+    const idx = STATUS.indexOf(currentStatus);
+    const next = STATUS[(idx + 1) % STATUS.length];
+    const { data, error } = await supabase
+      .from("steps")
+      .update({ status: next })
+      .eq("id", stepId)
+      .select();
+
+    if (!error && data) {
+      const step = data[0];
+      setSteps((prev) => ({
+        ...prev,
+        [step.event_id]: prev[step.event_id].map((s) =>
+          s.id === stepId ? { ...s, status: next } : s
+        ),
+      }));
+    }
   };
 
   // Remover etapa
-  const removeStep = (eventoId, stepId) => {
-    setEvents((prev) =>
-      prev.map((e) =>
-        e.id === eventoId
-          ? { ...e, steps: e.steps.filter((s) => s.id !== stepId) }
-          : e
-      )
-    );
+  const removeStep = async (stepId) => {
+    const { data, error } = await supabase
+      .from("steps")
+      .delete()
+      .eq("id", stepId)
+      .select();
+
+    if (!error && data) {
+      const step = data[0];
+      setSteps((prev) => ({
+        ...prev,
+        [step.event_id]: prev[step.event_id].filter((s) => s.id !== stepId),
+      }));
+    }
   };
 
-  // Remover evento
-  const removeEvento = (eventoId) => {
+  // Remover evento (e suas etapas associadas)
+  const removeEvento = async (eventoId) => {
+    await supabase.from("steps").delete().eq("event_id", eventoId);
+    await supabase.from("events").delete().eq("id", eventoId);
     setEvents((prev) => prev.filter((e) => e.id !== eventoId));
+    setSteps((prev) => {
+      const copy = { ...prev };
+      delete copy[eventoId];
+      return copy;
+    });
   };
 
   const percentDone = (steps) =>
@@ -140,13 +160,13 @@ export default function EventStepTracker() {
           <div className="progress-bar" style={{ margin: "0.5rem 0" }}>
             <div
               className="progress-fill"
-              style={{ width: `${percentDone(e.steps)}%` }}
+              style={{ width: `${percentDone(steps[e.id] || [])}%` }}
             />
           </div>
-          <small>{percentDone(e.steps)}% concluído</small>
+          <small>{percentDone(steps[e.id] || [])}% concluído</small>
 
           <ul className="step-list">
-            {e.steps.map((s) => (
+            {(steps[e.id] || []).map((s) => (
               <li key={s.id} className="step-item">
                 <span>{s.titulo}</span>
                 <span
@@ -162,14 +182,11 @@ export default function EventStepTracker() {
                         : "#34d399",
                     color: s.status === "Em progresso" ? "#000" : "#fff",
                   }}
-                  onClick={() => changeStatus(e.id, s.id)}
+                  onClick={() => changeStatus(s.id, s.status)}
                 >
                   {s.status}
                 </span>
-                <button
-                  className="delete"
-                  onClick={() => removeStep(e.id, s.id)}
-                >
+                <button className="delete" onClick={() => removeStep(s.id)}>
                   Remover
                 </button>
               </li>

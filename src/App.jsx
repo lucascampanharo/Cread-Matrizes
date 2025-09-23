@@ -9,21 +9,19 @@ import {
 
 import EventStepTracker from "./pages/EventStepTracker";
 import LoginPage from "./pages/Login";
-import Home from "./pages/Home"; // nova página que criamos
-import "./styles/App.css"; // CSS separado para o App
+import Home from "./pages/Home";
+import "./styles/App.css";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica usuário atual
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
     });
 
-    // Escuta mudanças de autenticação
     const { data: subscription } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -40,7 +38,7 @@ function App() {
   }
 
   if (!user) {
-    return <LoginPage />; // Tela de login se não tiver usuário
+    return <LoginPage />; // Tela de login
   }
 
   return (
@@ -54,13 +52,13 @@ function App() {
         </button>
 
         <Routes>
-          {/* Home com as disciplinas */}
+          {/* Página inicial = Home */}
           <Route path="/" element={<Home />} />
 
           {/* Página de eventos filtrada pela disciplina */}
           <Route path="/eventos/:disciplinaId" element={<EventStepTracker />} />
 
-          {/* Redireciona qualquer rota inválida para a Home */}
+          {/* Qualquer rota inválida leva para Home */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

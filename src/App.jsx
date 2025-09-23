@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
 import EventStepTracker from "./pages/EventStepTracker";
 import LoginPage from "./pages/Login";
+import Home from "./pages/Home"; // nova página que criamos
 import "./styles/App.css"; // CSS separado para o App
 
 function App() {
@@ -32,16 +40,31 @@ function App() {
   }
 
   if (!user) {
-    return <LoginPage />; // tela de login se não tiver usuário
+    return <LoginPage />; // Tela de login se não tiver usuário
   }
 
   return (
-    <div className="app-container">
-      <button className="logout-button" onClick={() => supabase.auth.signOut()}>
-        Sair
-      </button>
-      <EventStepTracker />
-    </div>
+    <Router>
+      <div className="app-container">
+        <button
+          className="logout-button"
+          onClick={() => supabase.auth.signOut()}
+        >
+          Sair
+        </button>
+
+        <Routes>
+          {/* Home com as disciplinas */}
+          <Route path="/" element={<Home />} />
+
+          {/* Página de eventos filtrada pela disciplina */}
+          <Route path="/eventos/:disciplinaId" element={<EventStepTracker />} />
+
+          {/* Redireciona qualquer rota inválida para a Home */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

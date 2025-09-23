@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase.js";
-import NewEventForm from "./NewEventForm";
-import EventList from "./EventList.jsx";
+import NewEventForm from "../components/NewEventForm.jsx";
+import EventList from "../components/EventList.jsx";
 import "../styles/StepTracker.css";
 
 export default function EventStepTracker() {

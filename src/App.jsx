@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
-import EventStepTracker from "./components/EventStepTracker";
-import LoginPage from "./components/Login";
+import EventStepTracker from "./pages/EventStepTracker";
+import LoginPage from "./pages/Login";
 import "./styles/App.css"; // CSS separado para o App
 
 function App() {

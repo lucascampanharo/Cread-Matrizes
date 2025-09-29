@@ -14,7 +14,6 @@ export default function Home() {
   ];
 
   const handleClick = (id) => {
-    // você pode passar o id da disciplina via rota
     navigate(`/eventos/${id}`);
   };
 
@@ -31,6 +30,14 @@ export default function Home() {
             {disc.nome}
           </div>
         ))}
+
+        {/* Card para criar nova disciplina */}
+        <div
+          className="disciplina-card nova-disciplina-card"
+          onClick={() => navigate("/nova-disciplina")}
+        >
+          ➕ Nova Disciplina
+        </div>
       </div>
     </div>
   );

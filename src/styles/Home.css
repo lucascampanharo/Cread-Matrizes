@@ -37,3 +37,19 @@
   color: white;
   transform: scale(1.05);
 }
+
+.nova-disciplina-card {
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.nova-disciplina-card:hover {
+  opacity: 0.9;
+  transform: translateY(-3px);
+}

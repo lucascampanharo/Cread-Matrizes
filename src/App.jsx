@@ -10,6 +10,7 @@ import {
 import EventStepTracker from "./pages/EventStepTracker";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
+import NewDisciplina from "./pages/NewDisciplina"; // <-- nova tela
 import "./styles/App.css";
 
 function App() {
@@ -54,6 +55,9 @@ function App() {
         <Routes>
           {/* Página inicial = Home */}
           <Route path="/" element={<Home />} />
+
+          {/* Página para criação de nova disciplina */}
+          <Route path="/nova-disciplina" element={<NewDisciplina />} />
 
           {/* Página de eventos filtrada pela disciplina */}
           <Route path="/eventos/:disciplinaId" element={<EventStepTracker />} />

@@ -1,17 +1,67 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabase";
 import "../styles/Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [disciplinas, setDisciplinas] = useState([]);
 
-  const disciplinas = [
-    { id: 1, nome: "Algoritmos e Programação" },
-    { id: 2, nome: "Comunicação" },
-    { id: 3, nome: "Modelos de Gestão" },
-    { id: 4, nome: "Competências Pessoais" },
-    { id: 5, nome: "Economia e Mercado" },
-    { id: 6, nome: "Sistemas de Produção" },
-  ];
+  // 🔹 Buscar disciplinas inicialmente
+  useEffect(() => {
+    const fetchDisciplinas = async () => {
+      const { data, error } = await supabase
+        .from("disciplinas")
+        .select("id, nome, created_at")
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao buscar disciplinas:", error.message);
+      } else {
+        setDisciplinas(data || []);
+      }
+    };
+
+    fetchDisciplinas();
+
+    // 🔹 Assinar mudanças em tempo real
+    const channel = supabase
+      .channel("disciplinas-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // insere, atualiza ou deleta
+          schema: "public",
+          table: "disciplinas",
+        },
+        (payload) => {
+          console.log("Mudança detectada:", payload);
+
+          // Atualiza a lista dependendo do tipo de evento
+          if (payload.eventType === "INSERT") {
+            setDisciplinas((prev) => [...prev, payload.new]);
+          }
+          if (payload.eventType === "UPDATE") {
+            setDisciplinas((prev) =>
+              prev.map((disc) =>
+                disc.id === payload.new.id ? payload.new : disc
+              )
+            );
+          }
+          if (payload.eventType === "DELETE") {
+            setDisciplinas((prev) =>
+              prev.filter((disc) => disc.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup ao desmontar
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleClick = (id) => {
     navigate(`/eventos/${id}`);

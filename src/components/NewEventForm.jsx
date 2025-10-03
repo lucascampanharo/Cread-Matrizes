@@ -11,13 +11,18 @@ export default function NewEventForm({ events, setEvents, disciplinaId }) {
       .from("events")
       .insert([
         {
-          titulo: novoEvento.trim(),
-          disciplina_id: disciplinaId, // <-- vincula à disciplina
+          titulo: novoEvento.trim(), // campo correto
+          disciplina_id: disciplinaId, // vínculo com disciplina
         },
       ])
       .select();
 
-    if (!error && data) setEvents([...events, data[0]]);
+    if (error) {
+      console.error("Erro ao inserir evento:", error.message);
+      return;
+    }
+
+    if (data) setEvents([...events, data[0]]);
     setNovoEvento("");
   };
 

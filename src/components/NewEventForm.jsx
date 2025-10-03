@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { supabase } from "../supabase";
 
-export default function NewEventForm({ events, setEvents }) {
+export default function NewEventForm({ events, setEvents, disciplinaId }) {
   const [novoEvento, setNovoEvento] = useState("");
 
   const addEvento = async () => {
     if (!novoEvento.trim()) return;
+
     const { data, error } = await supabase
       .from("events")
-      .insert([{ titulo: novoEvento.trim() }])
+      .insert([
+        {
+          titulo: novoEvento.trim(),
+          disciplina_id: disciplinaId, // <-- vincula à disciplina
+        },
+      ])
       .select();
 
     if (!error && data) setEvents([...events, data[0]]);

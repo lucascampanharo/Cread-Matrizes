@@ -6,14 +6,24 @@ export default function NewStepForm({ eventId, setSteps }) {
 
   const addStep = async () => {
     if (!novoStep.trim()) return;
+
     const { data, error } = await supabase
       .from("steps")
       .insert([
-        { titulo: novoStep.trim(), status: "Não iniciado", event_id: eventId },
+        {
+          description: novoStep.trim(),
+          status: "Não iniciado",
+          event_id: eventId,
+        },
       ])
       .select();
 
-    if (!error && data) {
+    if (error) {
+      console.error("Erro ao criar step:", error.message);
+      return;
+    }
+
+    if (data) {
       setSteps((prev) => ({
         ...prev,
         [eventId]: [...(prev[eventId] || []), data[0]],

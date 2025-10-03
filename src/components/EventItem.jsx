@@ -52,7 +52,7 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
           alignItems: "center",
         }}
       >
-        <h2>{event.titulo}</h2>
+        <h2>{event.title}</h2>
         <button className="delete" onClick={removeEvento}>
           Remover Evento
         </button>

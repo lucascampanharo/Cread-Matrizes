@@ -12,6 +12,7 @@ export default function StepItem({ step, eventId, setSteps }) {
       .update({ status: next })
       .eq("id", step.id)
       .select();
+
     if (data) {
       setSteps((prev) => ({
         ...prev,
@@ -28,6 +29,7 @@ export default function StepItem({ step, eventId, setSteps }) {
       .delete()
       .eq("id", step.id)
       .select();
+
     if (data) {
       setSteps((prev) => ({
         ...prev,
@@ -41,6 +43,7 @@ export default function StepItem({ step, eventId, setSteps }) {
       .from("steps")
       .update({ due_date: newDate })
       .eq("id", step.id);
+
     setSteps((prev) => ({
       ...prev,
       [eventId]: prev[eventId].map((s) =>
@@ -51,7 +54,8 @@ export default function StepItem({ step, eventId, setSteps }) {
 
   return (
     <li className="step-item">
-      <span>{step.titulo}</span>
+      {/* corrigido: description */}
+      <span>{step.description}</span>
       <span style={{ marginLeft: "1rem" }}>
         Prazo:
         <input

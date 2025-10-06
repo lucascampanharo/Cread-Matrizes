@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import SidebarStats from "../components/SidebarStats"; // ⬅️ importa a sidebar
 import "../styles/Home.css";
 
 export default function Home() {
@@ -30,14 +31,13 @@ export default function Home() {
       .on(
         "postgres_changes",
         {
-          event: "*", // insere, atualiza ou deleta
+          event: "*",
           schema: "public",
           table: "disciplinas",
         },
         (payload) => {
           console.log("Mudança detectada:", payload);
 
-          // Atualiza a lista dependendo do tipo de evento
           if (payload.eventType === "INSERT") {
             setDisciplinas((prev) => [...prev, payload.new]);
           }
@@ -57,7 +57,6 @@ export default function Home() {
       )
       .subscribe();
 
-    // Cleanup ao desmontar
     return () => {
       supabase.removeChannel(channel);
     };
@@ -68,25 +67,31 @@ export default function Home() {
   };
 
   return (
-    <div className="home-container">
-      <h1>Disciplinas</h1>
-      <div className="disciplinas-grid">
-        {disciplinas.map((disc) => (
-          <div
-            key={disc.id}
-            className="disciplina-card"
-            onClick={() => handleClick(disc.id)}
-          >
-            {disc.nome}
-          </div>
-        ))}
+    <div style={{ display: "flex" }}>
+      {/* 🧭 Sidebar de estatísticas */}
+      <SidebarStats />
 
-        {/* Card para criar nova disciplina */}
-        <div
-          className="disciplina-card nova-disciplina-card"
-          onClick={() => navigate("/nova-disciplina")}
-        >
-          ➕ Nova Disciplina
+      {/* 🧩 Conteúdo principal */}
+      <div className="home-container" style={{ marginLeft: "240px", flex: 1 }}>
+        <h1>Disciplinas</h1>
+        <div className="disciplinas-grid">
+          {disciplinas.map((disc) => (
+            <div
+              key={disc.id}
+              className="disciplina-card"
+              onClick={() => handleClick(disc.id)}
+            >
+              {disc.nome}
+            </div>
+          ))}
+
+          {/* Card para criar nova disciplina */}
+          <div
+            className="disciplina-card nova-disciplina-card"
+            onClick={() => navigate("/nova-disciplina")}
+          >
+            ➕ Nova Disciplina
+          </div>
         </div>
       </div>
     </div>

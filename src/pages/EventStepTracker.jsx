@@ -7,13 +7,30 @@ import "../styles/StepTracker.css";
 
 export default function EventStepTracker() {
   const { disciplinaId } = useParams(); // vem da rota
+  const [disciplina, setDisciplina] = useState(null);
   const [events, setEvents] = useState([]);
   const [steps, setSteps] = useState({});
   const navigate = useNavigate();
 
+  // 🔹 Buscar disciplina e seus eventos/etapas
   useEffect(() => {
     const fetchData = async () => {
-      // 1. Buscar eventos da disciplina
+      if (!disciplinaId) return;
+
+      // Buscar dados da disciplina
+      const { data: discData, error: discError } = await supabase
+        .from("disciplinas")
+        .select("*")
+        .eq("id", disciplinaId)
+        .single();
+
+      if (discError) {
+        console.error("Erro ao buscar disciplina:", discError.message);
+        return;
+      }
+      setDisciplina(discData);
+
+      // Buscar eventos da disciplina
       const { data: eventos, error: eventosError } = await supabase
         .from("events")
         .select("*")
@@ -26,7 +43,7 @@ export default function EventStepTracker() {
 
       setEvents(eventos || []);
 
-      // 2. Buscar etapas dos eventos
+      // Buscar etapas vinculadas aos eventos
       if (eventos && eventos.length > 0) {
         const { data: etapas, error: etapasError } = await supabase
           .from("steps")
@@ -52,26 +69,70 @@ export default function EventStepTracker() {
       }
     };
 
-    if (disciplinaId) fetchData();
+    fetchData();
   }, [disciplinaId]);
+
+  // 🔹 Função para excluir a disciplina e tudo dentro dela
+  const deleteDisciplina = async () => {
+    if (!disciplina) return;
+
+    const confirmar = window.confirm(
+      `Tem certeza que deseja excluir a disciplina "${disciplina.nome}"?\n\nIsso também excluirá todos os eventos e etapas associadas.`
+    );
+    if (!confirmar) return;
+
+    try {
+      // Buscar eventos da disciplina
+      const { data: eventos } = await supabase
+        .from("events")
+        .select("id")
+        .eq("disciplina_id", disciplinaId);
+
+      if (eventos?.length > 0) {
+        const eventIds = eventos.map((e) => e.id);
+
+        // Apagar etapas
+        await supabase.from("steps").delete().in("event_id", eventIds);
+
+        // Apagar eventos
+        await supabase.from("events").delete().in("id", eventIds);
+      }
+
+      // Apagar disciplina
+      await supabase.from("disciplinas").delete().eq("id", disciplinaId);
+
+      alert("Disciplina excluída com sucesso!");
+      navigate("/"); // volta para a home
+    } catch (error) {
+      console.error("Erro ao excluir disciplina:", error.message);
+      alert("Erro ao excluir disciplina.");
+    }
+  };
 
   return (
     <div className="step-tracker">
-      <h1>Eventos e Etapas</h1>
+      <div className="tracker-header">
+        <h1>{disciplina ? disciplina.nome : "Carregando..."}</h1>
 
-      {/* Botão voltar */}
-      <button className="back-button" onClick={() => navigate("/")}>
-        ⬅ Voltar ao Menu
-      </button>
+        <div className="tracker-buttons">
+          <button className="back-button" onClick={() => navigate("/")}>
+            ⬅ Voltar
+          </button>
 
-      {/* Criar novo evento, passando disciplinaId */}
+          <button className="delete-disciplina-btn" onClick={deleteDisciplina}>
+            🗑️ Excluir Disciplina
+          </button>
+        </div>
+      </div>
+
+      {/* Criar novo evento */}
       <NewEventForm
         events={events}
         setEvents={setEvents}
         disciplinaId={disciplinaId}
       />
 
-      {/* Lista de eventos + etapas */}
+      {/* Lista de eventos e etapas */}
       <EventList
         events={events}
         steps={steps}

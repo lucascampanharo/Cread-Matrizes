@@ -118,3 +118,29 @@
 .back-button:active {
   transform: translateY(0);
 }
+
+/* Botão Excluir Disciplina (baseado no estilo do seu tema) */
+.delete-disciplina-btn {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(90deg, #6366f1, #ec4899);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.3s ease, background 0.3s ease;
+  box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+}
+
+.delete-disciplina-btn:hover {
+  background: linear-gradient(90deg, #4f46e5, #db2777);
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.delete-disciplina-btn:active {
+  transform: translateY(0);
+}

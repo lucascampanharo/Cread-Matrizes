@@ -1,0 +1,131 @@
+:root {
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 60px;
+  --toggle-size: 40px;
+  --toggle-offset: 20px;
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+.sidebar-stats {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  background: linear-gradient(180deg, #4f46e5, #06b6d4);
+  color: white;
+  padding: 2rem 1rem;
+  font-family: Arial, sans-serif;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 1000;
+  transition: width 0.35s ease, transform 0.35s ease;
+  overflow: visible; /* garante que o botão não será cortado */
+}
+
+/* ====== ESTADO FECHADA ====== */
+.sidebar-stats.fechada {
+  width: var(--sidebar-collapsed);
+  transform: translateX(8px);
+  padding: 1rem 0.5rem;
+}
+
+/* ====== BOTÃO DE ABRIR/FECHAR ====== */
+.toggle-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: white;
+  background: #4f46e5;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  z-index: 1100;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+/* Posição do botão quando sidebar aberta */
+.sidebar-stats.aberta .toggle-btn {
+  right: calc(var(--sidebar-width) - var(--toggle-offset));
+}
+
+/* Posição do botão quando sidebar fechada */
+.sidebar-stats.fechada .toggle-btn {
+  right: calc(var(--sidebar-collapsed) - var(--toggle-offset));
+}
+
+/* Hover */
+.toggle-btn:hover {
+  background: #06b6d4;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* ====== TÍTULO ====== */
+.sidebar-stats h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 0.6rem;
+}
+
+/* ====== CADA ITEM DE ESTATÍSTICA ====== */
+.stat-item {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.8rem;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.stat-item h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.stat-item p {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+}
+
+/* ====== BARRA DE PROGRESSO ====== */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 768px) {
+  .sidebar-stats {
+    --sidebar-width: 200px;
+    --sidebar-collapsed: 50px;
+  }
+
+  .toggle-btn {
+    --toggle-size: 35px;
+  }
+}

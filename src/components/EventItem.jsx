@@ -13,12 +13,9 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
         );
 
   const removeEvento = async () => {
-    // Remove etapas do evento
     await supabase.from("steps").delete().eq("event_id", event.id);
-    // Remove o próprio evento
     await supabase.from("events").delete().eq("id", event.id);
 
-    // Atualiza estados locais
     setSteps((prev) => {
       const copy = { ...prev };
       delete copy[event.id];
@@ -55,7 +52,7 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
           alignItems: "center",
         }}
       >
-        {/* Campo correto do banco → titulo */}
+        {/* usar o campo que está no banco (events.titulo) */}
         <h2>{event.titulo}</h2>
         <button className="delete" onClick={removeEvento}>
           Remover Evento
@@ -93,7 +90,8 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
         ))}
       </ul>
 
-      <NewStepForm eventId={event.id} setSteps={setSteps} />
+      {/* passo steps para NewStepForm para ajudar na detecção de campo */}
+      <NewStepForm eventId={event.id} setSteps={setSteps} steps={steps} />
     </div>
   );
 }

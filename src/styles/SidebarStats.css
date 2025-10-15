@@ -9,26 +9,26 @@
 .sidebar-stats {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0; /* 👈 mudou de right para left */
   height: 100vh;
   width: var(--sidebar-width);
   background: linear-gradient(180deg, #4f46e5, #06b6d4);
   color: white;
   padding: 2rem 1rem;
   font-family: Arial, sans-serif;
-  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2); /* 👈 sombra para o outro lado */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   z-index: 1000;
   transition: width 0.35s ease, transform 0.35s ease;
-  overflow: visible; /* garante que o botão não será cortado */
+  overflow: visible;
 }
 
 /* ====== ESTADO FECHADA ====== */
 .sidebar-stats.fechada {
   width: var(--sidebar-collapsed);
-  transform: translateX(8px);
+  transform: translateX(-8px); /* 👈 movemos para a esquerda */
   padding: 1rem 0.5rem;
 }
 
@@ -52,12 +52,14 @@
 
 /* Posição do botão quando sidebar aberta */
 .sidebar-stats.aberta .toggle-btn {
-  right: calc(var(--sidebar-width) - var(--toggle-offset));
+  left: calc(
+    var(--sidebar-width) - var(--toggle-offset)
+  ); /* 👈 agora alinha à esquerda */
 }
 
 /* Posição do botão quando sidebar fechada */
 .sidebar-stats.fechada .toggle-btn {
-  right: calc(var(--sidebar-collapsed) - var(--toggle-offset));
+  left: calc(var(--sidebar-collapsed) - var(--toggle-offset)); /* 👈 idem */
 }
 
 /* Hover */

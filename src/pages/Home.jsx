@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
-import SidebarStats from "../components/SidebarStats"; // ⬅️ importa a sidebar
+import SidebarStats from "../components/SidebarStats";
 import "../styles/Home.css";
 
-export default function Home() {
+export default function Home({ user }) {
   const navigate = useNavigate();
   const [disciplinas, setDisciplinas] = useState([]);
 
-  // 🔹 Buscar disciplinas inicialmente
   useEffect(() => {
+    if (!user) return;
+
+    // 🔹 Buscar apenas disciplinas do usuário logado
     const fetchDisciplinas = async () => {
       const { data, error } = await supabase
         .from("disciplinas")
         .select("id, nome, created_at")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: true });
 
       if (error) {
@@ -25,7 +28,7 @@ export default function Home() {
 
     fetchDisciplinas();
 
-    // 🔹 Assinar mudanças em tempo real
+    // 🔹 Escutar mudanças em tempo real (somente do usuário atual)
     const channel = supabase
       .channel("disciplinas-changes")
       .on(
@@ -34,6 +37,7 @@ export default function Home() {
           event: "*",
           schema: "public",
           table: "disciplinas",
+          filter: `user_id=eq.${user.id}`, // <-- 🔥 apenas as do usuário logado
         },
         (payload) => {
           console.log("Mudança detectada:", payload);
@@ -60,7 +64,7 @@ export default function Home() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [user]);
 
   const handleClick = (id) => {
     navigate(`/eventos/${id}`);
@@ -69,11 +73,11 @@ export default function Home() {
   return (
     <div style={{ display: "flex" }}>
       {/* 🧭 Sidebar de estatísticas */}
-      <SidebarStats />
+      <SidebarStats user={user} />
 
       {/* 🧩 Conteúdo principal */}
       <div className="home-container" style={{ marginLeft: "240px", flex: 1 }}>
-        <h1>Disciplinas</h1>
+        <h1>Minhas Disciplinas</h1>
         <div className="disciplinas-grid">
           {disciplinas.map((disc) => (
             <div

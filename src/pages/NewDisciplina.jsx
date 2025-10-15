@@ -17,7 +17,22 @@ export default function NewDisciplina() {
 
     setLoading(true);
 
-    const { error } = await supabase.from("disciplinas").insert([{ nome }]); // insere no banco
+    // 🔹 Obtém o usuário logado
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("Usuário não autenticado. Faça login novamente.");
+      setLoading(false);
+      navigate("/login");
+      return;
+    }
+
+    // 🔹 Insere disciplina com user_id
+    const { error } = await supabase
+      .from("disciplinas")
+      .insert([{ nome, user_id: user.id }]);
 
     setLoading(false);
 
@@ -26,7 +41,7 @@ export default function NewDisciplina() {
       alert("Erro ao criar disciplina.");
     } else {
       alert("Disciplina criada com sucesso!");
-      navigate("/"); // volta para a Home
+      navigate("/");
     }
   };
 

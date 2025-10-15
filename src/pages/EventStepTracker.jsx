@@ -6,31 +6,51 @@ import EventList from "../components/EventList.jsx";
 import "../styles/StepTracker.css";
 
 export default function EventStepTracker() {
-  const { disciplinaId } = useParams(); // vem da rota
+  const { disciplinaId } = useParams();
   const [disciplina, setDisciplina] = useState(null);
   const [events, setEvents] = useState([]);
   const [steps, setSteps] = useState({});
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // 🔹 Buscar disciplina e seus eventos/etapas
+  // 🔹 Obtém o usuário atual
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        navigate("/login");
+      } else {
+        setUser(user);
+      }
+    };
+    getUser();
+  }, [navigate]);
+
+  // 🔹 Buscar disciplina, eventos e etapas do usuário
   useEffect(() => {
     const fetchData = async () => {
-      if (!disciplinaId) return;
+      if (!disciplinaId || !user) return;
 
-      // Buscar dados da disciplina
+      // 🔸 Buscar disciplina específica do usuário
       const { data: discData, error: discError } = await supabase
         .from("disciplinas")
         .select("*")
         .eq("id", disciplinaId)
+        .eq("user_id", user.id)
         .single();
 
       if (discError) {
         console.error("Erro ao buscar disciplina:", discError.message);
+        alert("Disciplina não encontrada ou sem permissão de acesso.");
+        navigate("/");
         return;
       }
+
       setDisciplina(discData);
 
-      // Buscar eventos da disciplina
+      // 🔸 Buscar eventos dessa disciplina
       const { data: eventos, error: eventosError } = await supabase
         .from("events")
         .select("*")
@@ -43,7 +63,7 @@ export default function EventStepTracker() {
 
       setEvents(eventos || []);
 
-      // Buscar etapas vinculadas aos eventos
+      // 🔸 Buscar etapas vinculadas aos eventos
       if (eventos && eventos.length > 0) {
         const { data: etapas, error: etapasError } = await supabase
           .from("steps")
@@ -70,9 +90,9 @@ export default function EventStepTracker() {
     };
 
     fetchData();
-  }, [disciplinaId]);
+  }, [disciplinaId, user, navigate]);
 
-  // 🔹 Função para excluir a disciplina e tudo dentro dela
+  // 🔹 Excluir disciplina e seus dados
   const deleteDisciplina = async () => {
     if (!disciplina) return;
 
@@ -82,7 +102,6 @@ export default function EventStepTracker() {
     if (!confirmar) return;
 
     try {
-      // Buscar eventos da disciplina
       const { data: eventos } = await supabase
         .from("events")
         .select("id")
@@ -91,18 +110,18 @@ export default function EventStepTracker() {
       if (eventos?.length > 0) {
         const eventIds = eventos.map((e) => e.id);
 
-        // Apagar etapas
         await supabase.from("steps").delete().in("event_id", eventIds);
-
-        // Apagar eventos
         await supabase.from("events").delete().in("id", eventIds);
       }
 
-      // Apagar disciplina
-      await supabase.from("disciplinas").delete().eq("id", disciplinaId);
+      await supabase
+        .from("disciplinas")
+        .delete()
+        .eq("id", disciplinaId)
+        .eq("user_id", user.id);
 
       alert("Disciplina excluída com sucesso!");
-      navigate("/"); // volta para a home
+      navigate("/");
     } catch (error) {
       console.error("Erro ao excluir disciplina:", error.message);
       alert("Erro ao excluir disciplina.");
@@ -125,20 +144,21 @@ export default function EventStepTracker() {
         </div>
       </div>
 
-      {/* Criar novo evento */}
-      <NewEventForm
-        events={events}
-        setEvents={setEvents}
-        disciplinaId={disciplinaId}
-      />
-
-      {/* Lista de eventos e etapas */}
-      <EventList
-        events={events}
-        steps={steps}
-        setSteps={setSteps}
-        setEvents={setEvents}
-      />
+      {disciplina && (
+        <>
+          <NewEventForm
+            events={events}
+            setEvents={setEvents}
+            disciplinaId={disciplinaId}
+          />
+          <EventList
+            events={events}
+            steps={steps}
+            setSteps={setSteps}
+            setEvents={setEvents}
+          />
+        </>
+      )}
     </div>
   );
 }

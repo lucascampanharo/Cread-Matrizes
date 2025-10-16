@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase.js";
 import NewEventForm from "../components/event_component/NewEventForm.jsx";
 import EventList from "../components/step_component/EventList.jsx";
+import SidebarStats from "../components/SidebarStats.jsx";
 import "../styles/StepTracker.css";
 
 export default function EventStepTracker() {
@@ -129,36 +130,43 @@ export default function EventStepTracker() {
   };
 
   return (
-    <div className="step-tracker">
-      <div className="tracker-header">
-        <h1>{disciplina ? disciplina.nome : "Carregando..."}</h1>
+    <div className="step-tracker-container">
+      <SidebarStats />
 
-        <div className="tracker-buttons">
-          <button className="back-button" onClick={() => navigate("/")}>
-            ⬅ Voltar
-          </button>
+      <div className="step-tracker">
+        <div className="tracker-header">
+          <h1>{disciplina ? disciplina.nome : "Carregando..."}</h1>
 
-          <button className="delete-disciplina-btn" onClick={deleteDisciplina}>
-            🗑️ Excluir Disciplina
-          </button>
+          <div className="tracker-buttons">
+            <button className="back-button" onClick={() => navigate("/")}>
+              ⬅ Voltar
+            </button>
+
+            <button
+              className="delete-disciplina-btn"
+              onClick={deleteDisciplina}
+            >
+              🗑️ Excluir Disciplina
+            </button>
+          </div>
         </div>
-      </div>
 
-      {disciplina && (
-        <>
-          <NewEventForm
-            events={events}
-            setEvents={setEvents}
-            disciplinaId={disciplinaId}
-          />
-          <EventList
-            events={events}
-            steps={steps}
-            setSteps={setSteps}
-            setEvents={setEvents}
-          />
-        </>
-      )}
+        {disciplina && (
+          <>
+            <NewEventForm
+              events={events}
+              setEvents={setEvents}
+              disciplinaId={disciplinaId}
+            />
+            <EventList
+              events={events}
+              steps={steps}
+              setSteps={setSteps}
+              setEvents={setEvents}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }

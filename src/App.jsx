@@ -11,6 +11,7 @@ import EventStepTracker from "./pages/EventStepTracker";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
 import NewDisciplina from "./pages/NewDisciplina";
+import Header from "./components/header.jsx";
 import "./styles/App.css";
 
 function App() {
@@ -48,32 +49,20 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <div className="app-header">
-          <button
-            className="logout-button"
-            onClick={() => supabase.auth.signOut()}
-          >
-            Sair
-          </button>
-        </div>
+        {/* ✅ HEADER FIXO */}
+        <Header user={user} />
 
+        {/* Rotas principais */}
         <Routes>
-          {/* Página inicial */}
           <Route path="/" element={<Home user={user} />} />
-
-          {/* Criação de nova disciplina */}
           <Route
             path="/nova-disciplina"
             element={<NewDisciplina user={user} />}
           />
-
-          {/* Página de eventos de uma disciplina */}
           <Route
             path="/eventos/:disciplinaId"
             element={<EventStepTracker user={user} />}
           />
-
-          {/* Rotas inválidas redirecionam para Home */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

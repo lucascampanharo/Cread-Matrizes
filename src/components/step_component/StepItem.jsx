@@ -1,4 +1,4 @@
-import { supabase } from "../supabase";
+import { supabase } from "../../supabase";
 
 const STATUS = ["Não iniciado", "Em progresso", "Finalizado"];
 

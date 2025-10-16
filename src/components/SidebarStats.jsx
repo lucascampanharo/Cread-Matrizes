@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
-import "../styles/SidebarStats.css";
+import "../styles/component_styles/SidebarStats.css";
 
 export default function SidebarStats() {
   const [stats, setStats] = useState({

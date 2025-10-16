@@ -1,6 +1,6 @@
 import { supabase } from "../../supabase";
-import StepItem from "../StepItem";
-import NewStepForm from "../NewStepForm";
+import StepItem from "../step_component/StepItem.jsx";
+import NewStepForm from "../step_component/NewStepForm.jsx";
 
 export default function EventItem({ event, steps, setSteps, setEvents }) {
   const percentDone = (steps) =>

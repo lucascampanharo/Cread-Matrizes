@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, User } from "lucide-react";
 import { supabase } from "../supabase";
-import "../styles/Header.css";
+import "../styles/component_styles/Header.css";
 
 export default function Header() {
   const [menuAberto, setMenuAberto] = useState(false);

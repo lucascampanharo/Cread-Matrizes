@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../supabase.js";
-import NewEventForm from "../components/NewEventForm.jsx";
-import EventList from "../components/EventList.jsx";
+import NewEventForm from "../components/event_component/NewEventForm.jsx";
+import EventList from "../components/step_component/EventList.jsx";
 import "../styles/StepTracker.css";
 
 export default function EventStepTracker() {

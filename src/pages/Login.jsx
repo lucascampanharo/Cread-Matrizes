@@ -27,19 +27,28 @@ export default function LoginPage() {
         alert("Conta criada! Se necessário, confirme o email.");
       }
     } catch (err) {
-      setErro(err.message);
+      console.error(err);
+
+      if (err.message.includes("Invalid login credentials")) {
+        setErro("Email ou senha incorretos.");
+      } else if (err.message.includes("User already registered")) {
+        setErro("Este email já está cadastrado.");
+      } else if (err.message.includes("Password should be at least")) {
+        setErro("A senha deve ter pelo menos 6 caracteres.");
+      } else {
+        setErro("Ocorreu um erro. Tente novamente mais tarde.");
+      }
     }
   };
 
   return (
     <div className="login-page">
-      {/* LADO ESQUERDO */}
+      {/* Lado esquerdo */}
       <div className="left-side">
-        {/* pode colocar uma logo, ícone ou apenas deixar o degradê */}
         <h1 className="logo">FTEC</h1>
       </div>
 
-      {/* LADO DIREITO (mantém o seu código atual) */}
+      {/* Lado direito */}
       <div className="right-side">
         <div className="login-box">
           <h2>{modo === "login" ? "Login" : "Registrar"}</h2>

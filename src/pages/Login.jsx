@@ -45,7 +45,7 @@ export default function LoginPage() {
     <div className="login-page">
       {/* Lado esquerdo */}
       <div className="left-side">
-        <h1 className="logo">FTEC</h1>
+        <h1 className="logo">Uniftec</h1>
       </div>
 
       {/* Lado direito */}

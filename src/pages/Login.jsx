@@ -50,6 +50,7 @@ export default function LoginPage() {
 
       {/* Lado direito */}
       <div className="right-side">
+        <h2>Bem-vindo!</h2>
         <div className="login-box">
           <h2>{modo === "login" ? "Login" : "Registrar"}</h2>
 

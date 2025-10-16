@@ -9,7 +9,7 @@ export default function SidebarStats() {
     naoIniciadas: 0,
   });
 
-  const [aberta, setAberta] = useState(true); // controla se a sidebar está aberta
+  const [aberta, setAberta] = useState(false); // controla se a sidebar está aberta
 
   useEffect(() => {
     const fetchStats = async () => {

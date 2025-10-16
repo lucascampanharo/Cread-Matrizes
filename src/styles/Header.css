@@ -1,3 +1,4 @@
+/* ====== HEADER GERAL ====== */
 .header {
   width: 100%;
   height: 60px;
@@ -5,7 +6,7 @@
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between; /* ⬅️ adicionamos isso para separar esquerda e direita */
   padding: 0 1.5rem;
   position: fixed;
   top: 0;
@@ -13,14 +14,28 @@
   z-index: 100;
 }
 
-/* Área da direita (ícones e usuário) */
+/* ====== ÁREA DA ESQUERDA ====== */
+.header-left {
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+}
+
+.header-left h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ====== ÁREA DA DIREITA ====== */
 .header-right {
   display: flex;
   align-items: center;
   gap: 1.2rem;
 }
 
-/* Botão de ícone (notificações, etc.) */
+/* ====== BOTÃO DE ÍCONE ====== */
 .icon-button {
   background: none;
   border: none;
@@ -35,7 +50,7 @@
   background: #f3f4f6;
 }
 
-/* Avatar do usuário */
+/* ====== AVATAR DO USUÁRIO ====== */
 .user-avatar {
   background: #e5e7eb;
   border: none;
@@ -53,7 +68,7 @@
   background: #d1d5db;
 }
 
-/* Dropdown (menu do usuário) */
+/* ====== DROPDOWN ====== */
 .dropdown-menu {
   position: absolute;
   top: 60px;
@@ -80,7 +95,7 @@
   background: #f3f4f6;
 }
 
-/* Animação suave */
+/* ====== ANIMAÇÃO ====== */
 @keyframes fadeIn {
   from {
     opacity: 0;

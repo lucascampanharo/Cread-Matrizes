@@ -20,6 +20,9 @@ export default function Header() {
 
   return (
     <header className="header">
+      <header className="header-left">
+        <h2>Olá</h2>
+      </header>
       <div className="header-right">
         <button className="icon-button">
           <Bell size={18} />

@@ -32,44 +32,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>{modo === "login" ? "Login" : "Registrar"}</h2>
+    <div className="login-page">
+      {/* LADO ESQUERDO */}
+      <div className="left-side">
+        {/* pode colocar uma logo, ícone ou apenas deixar o degradê */}
+        <h1 className="logo">FTEC</h1>
+      </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="login-input"
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          className="login-input"
-        />
+      {/* LADO DIREITO (mantém o seu código atual) */}
+      <div className="right-side">
+        <div className="login-box">
+          <h2>{modo === "login" ? "Login" : "Registrar"}</h2>
 
-        {erro && <p className="login-error">{erro}</p>}
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-input"
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className="login-input"
+          />
 
-        <button onClick={handleAuth} className="login-button">
-          {modo === "login" ? "Entrar" : "Criar Conta"}
-        </button>
+          {erro && <p className="login-error">{erro}</p>}
 
-        <p className="login-toggle">
-          {modo === "login" ? (
-            <>
-              Não tem conta?{" "}
-              <span onClick={() => setModo("register")}>Registre-se</span>
-            </>
-          ) : (
-            <>
-              Já tem conta?{" "}
-              <span onClick={() => setModo("login")}>Faça login</span>
-            </>
-          )}
-        </p>
+          <button onClick={handleAuth} className="login-button">
+            {modo === "login" ? "Entrar" : "Criar Conta"}
+          </button>
+
+          <p className="login-toggle">
+            {modo === "login" ? (
+              <>
+                Não tem conta?{" "}
+                <span onClick={() => setModo("register")}>Registre-se</span>
+              </>
+            ) : (
+              <>
+                Já tem conta?{" "}
+                <span onClick={() => setModo("login")}>Faça login</span>
+              </>
+            )}
+          </p>
+        </div>
       </div>
     </div>
   );

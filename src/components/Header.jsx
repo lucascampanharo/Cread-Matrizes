@@ -39,6 +39,7 @@ export default function Header() {
           {menuAberto && (
             <div className="dropdown-menu">
               <p onClick={() => navigate("/perfil")}>👤 Meu Perfil</p>
+              <p onClick={() => navigate("/config")}>⚙️ Configurações</p>
               <p onClick={handleSignOut}>🚪 Sair</p>
             </div>
           )}

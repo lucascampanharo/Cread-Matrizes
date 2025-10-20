@@ -12,6 +12,7 @@ import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
 import NewDisciplina from "./pages/NewDisciplina";
 import Header from "./components/header.jsx";
+import Perfil from "./pages/Perfil.jsx";
 import "./styles/App.css";
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
             element={<EventStepTracker user={user} />}
           />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/perfil" element={<Perfil />} />
         </Routes>
       </div>
     </Router>

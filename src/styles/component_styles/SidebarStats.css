@@ -1,22 +1,15 @@
-:root {
-  --sidebar-width: 240px;
-  --sidebar-collapsed: 60px;
-  --toggle-size: 40px;
-  --toggle-offset: 20px;
-}
-
 /* ====== CONTAINER PRINCIPAL ====== */
 .sidebar-stats {
   position: fixed;
   top: 0;
-  left: 0; /* 👈 mudou de right para left */
+  left: 0;
   height: 100vh;
   width: var(--sidebar-width);
   background: linear-gradient(180deg, #4f46e5, #06b6d4);
   color: white;
   padding: 2rem 1rem;
   font-family: Arial, sans-serif;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2); /* 👈 sombra para o outro lado */
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -28,7 +21,7 @@
 /* ====== ESTADO FECHADA ====== */
 .sidebar-stats.fechada {
   width: var(--sidebar-collapsed);
-  transform: translateX(-8px); /* 👈 movemos para a esquerda */
+  transform: translateX(-8px);
   padding: 1rem 0.5rem;
 }
 
@@ -50,19 +43,14 @@
   transition: transform 0.25s ease, background 0.25s ease;
 }
 
-/* Posição do botão quando sidebar aberta */
 .sidebar-stats.aberta .toggle-btn {
-  left: calc(
-    var(--sidebar-width) - var(--toggle-offset)
-  ); /* 👈 agora alinha à esquerda */
+  left: calc(var(--sidebar-width) - var(--toggle-offset));
 }
 
-/* Posição do botão quando sidebar fechada */
 .sidebar-stats.fechada .toggle-btn {
-  left: calc(var(--sidebar-collapsed) - var(--toggle-offset)); /* 👈 idem */
+  left: calc(var(--sidebar-collapsed) - var(--toggle-offset));
 }
 
-/* Hover */
 .toggle-btn:hover {
   background: #06b6d4;
   transform: translateY(-50%) scale(1.05);
@@ -118,16 +106,4 @@
   background: #22c55e;
   border-radius: 4px;
   transition: width 0.3s ease;
-}
-
-/* ====== RESPONSIVIDADE ====== */
-@media (max-width: 768px) {
-  .sidebar-stats {
-    --sidebar-width: 200px;
-    --sidebar-collapsed: 50px;
-  }
-
-  .toggle-btn {
-    --toggle-size: 35px;
-  }
 }

@@ -1,108 +1,49 @@
-/* ====== HEADER GERAL ====== */
 .header {
-  width: 100%;
-  height: 60px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* ⬅️ adicionamos isso para separar esquerda e direita */
-  padding: 0 1.5rem;
   position: fixed;
   top: 0;
-  left: 0;
-  z-index: 100;
-}
-
-/* ====== ÁREA DA ESQUERDA ====== */
-.header-left {
+  left: var(--sidebar-width);
+  right: 0;
+  height: 60px;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  color: white;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-left: 40px;
+  padding: 0 1.5rem;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1300; /* 👈 AUMENTADO: agora o header fica acima da sidebar */
+  transition: left 0.35s ease, width 0.35s ease;
 }
 
-.header-left h2 {
-  margin: 0;
-  font-size: 1.5rem;
+.header h1 {
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #374151;
-}
-
-/* ====== ÁREA DA DIREITA ====== */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-/* ====== BOTÃO DE ÍCONE ====== */
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #374151;
-  padding: 0.25rem;
-  border-radius: 50%;
-  transition: background 0.2s;
-}
-
-.icon-button:hover {
-  background: #f3f4f6;
-}
-
-/* ====== AVATAR DO USUÁRIO ====== */
-.user-avatar {
-  background: #e5e7eb;
-  border: none;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.user-avatar:hover {
-  background: #d1d5db;
-}
-
-/* ====== DROPDOWN ====== */
-.dropdown-menu {
-  position: absolute;
-  top: 60px;
-  right: 1.5rem;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 160px;
-  text-align: left;
-  padding: 0.5rem 0;
-  animation: fadeIn 0.15s ease-in;
-}
-
-.dropdown-menu p {
-  padding: 0.5rem 1rem;
   margin: 0;
-  font-size: 0.9rem;
-  color: #374151;
+}
+
+/* ====== NAVEGAÇÃO ====== */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-nav a,
+.header-nav button {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.dropdown-menu p:hover {
-  background: #f3f4f6;
-}
-
-/* ====== ANIMAÇÃO ====== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.header-nav a:hover,
+.header-nav button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }

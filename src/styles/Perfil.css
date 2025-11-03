@@ -14,6 +14,13 @@
   color: #333;
 }
 
+.perfil-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
 .perfil-card p {
   font-size: 1rem;
   margin: 0.5rem 0;
@@ -22,4 +29,77 @@
 
 .perfil-card strong {
   color: #111;
+}
+
+/* ===== Linha com nome e botões ===== */
+.perfil-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.perfil-input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.perfil-input:focus {
+  border-color: #4f46e5;
+}
+
+/* ===== Botões ===== */
+.perfil-btn {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  font-size: 0.9rem;
+}
+
+.perfil-btn:hover {
+  background-color: #4338ca;
+}
+
+.perfil-btn.salvar {
+  background-color: #22c55e;
+}
+
+.perfil-btn.salvar:hover {
+  background-color: #16a34a;
+}
+
+.perfil-btn.cancelar {
+  background-color: #e53e3e;
+}
+
+.perfil-btn.cancelar:hover {
+  background-color: #c53030;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 480px) {
+  .perfil-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+
+  .perfil-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .perfil-btn {
+    width: 100%;
+    text-align: center;
+  }
 }

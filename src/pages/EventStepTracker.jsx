@@ -131,7 +131,8 @@ export default function EventStepTracker() {
 
   return (
     <div className="step-tracker-container">
-      <SidebarStats />
+      {/* ❌ REMOVER ESTA LINHA */}
+      {/* <SidebarStats /> */}
 
       <div className="step-tracker">
         <div className="tracker-header">

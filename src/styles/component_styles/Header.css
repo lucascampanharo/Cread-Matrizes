@@ -1,8 +1,5 @@
 .header {
-  position: fixed;
-  top: 0;
   left: var(--sidebar-width);
-  right: 0;
   height: 60px;
   background: linear-gradient(90deg, #4f46e5, #06b6d4);
   color: white;

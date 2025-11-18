@@ -21,6 +21,9 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔥 Novo: estado global para a sidebar
+  const [sidebarAberta, setSidebarAberta] = useState(false);
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
@@ -44,9 +47,13 @@ function App() {
   return (
     <Router>
       <div className="layout">
-        <SidebarStats />
+        {/* 🔥 Sidebar controlada por um estado global */}
+        <SidebarStats aberta={sidebarAberta} setAberta={setSidebarAberta} />
+
         <div className="main-content">
+          {/* 🔥 Header também recebe o controle da sidebar, caso queira integrar */}
           <Header user={user} />
+
           <Routes>
             <Route path="/" element={<Home user={user} />} />
             <Route

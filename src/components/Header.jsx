@@ -3,7 +3,7 @@ import { supabase } from "../supabase";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/component_styles/Header.css";
 
-export default function Header({ user }) {
+export default function Header({ user, sidebarAberta }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
 
@@ -11,7 +11,6 @@ export default function Header({ user }) {
     async function fetchUserName() {
       if (!user) return;
 
-      // Busca o nome na tabela profiles
       const { data, error } = await supabase
         .from("profiles")
         .select("full_name")
@@ -34,7 +33,11 @@ export default function Header({ user }) {
   }
 
   return (
-    <header className="header">
+    <header
+      className={`header ${
+        sidebarAberta ? "header-sidebar-open" : "header-sidebar-closed"
+      }`}
+    >
       <h1>
         Bem-vindo{userName ? `, ${userName}` : user ? `, ${user.email}` : ""}!
       </h1>

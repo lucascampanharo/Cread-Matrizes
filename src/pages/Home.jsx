@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
-import SidebarStats from "../components/SidebarStats";
 import "../styles/Home.css";
 
 export default function Home({ user }) {
@@ -11,7 +10,6 @@ export default function Home({ user }) {
   useEffect(() => {
     if (!user) return;
 
-    // 🔹 Buscar apenas disciplinas do usuário logado
     const fetchDisciplinas = async () => {
       const { data, error } = await supabase
         .from("disciplinas")
@@ -28,7 +26,6 @@ export default function Home({ user }) {
 
     fetchDisciplinas();
 
-    // 🔹 Escutar mudanças em tempo real (somente do usuário atual)
     const channel = supabase
       .channel("disciplinas-changes")
       .on(
@@ -37,7 +34,7 @@ export default function Home({ user }) {
           event: "*",
           schema: "public",
           table: "disciplinas",
-          filter: `user_id=eq.${user.id}`, // <-- 🔥 apenas as do usuário logado
+          filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
           console.log("Mudança detectada:", payload);
@@ -45,6 +42,7 @@ export default function Home({ user }) {
           if (payload.eventType === "INSERT") {
             setDisciplinas((prev) => [...prev, payload.new]);
           }
+
           if (payload.eventType === "UPDATE") {
             setDisciplinas((prev) =>
               prev.map((disc) =>
@@ -52,6 +50,7 @@ export default function Home({ user }) {
               )
             );
           }
+
           if (payload.eventType === "DELETE") {
             setDisciplinas((prev) =>
               prev.filter((disc) => disc.id !== payload.old.id)
@@ -71,31 +70,25 @@ export default function Home({ user }) {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      {/* 🧭 Sidebar de estatísticas */}
-      <SidebarStats user={user} />
+    <div className="home-container">
+      <h1>Minhas Disciplinas</h1>
 
-      {/* 🧩 Conteúdo principal */}
-      <div className="home-container" style={{ marginLeft: "240px", flex: 1 }}>
-        <h1>Minhas Disciplinas</h1>
-        <div className="disciplinas-grid">
-          {disciplinas.map((disc) => (
-            <div
-              key={disc.id}
-              className="disciplina-card"
-              onClick={() => handleClick(disc.id)}
-            >
-              {disc.nome}
-            </div>
-          ))}
-
-          {/* Card para criar nova disciplina */}
+      <div className="disciplinas-grid">
+        {disciplinas.map((disc) => (
           <div
-            className="disciplina-card nova-disciplina-card"
-            onClick={() => navigate("/nova-disciplina")}
+            key={disc.id}
+            className="disciplina-card"
+            onClick={() => handleClick(disc.id)}
           >
-            ➕ Nova Disciplina
+            {disc.nome}
           </div>
+        ))}
+
+        <div
+          className="disciplina-card nova-disciplina-card"
+          onClick={() => navigate("/nova-disciplina")}
+        >
+          ➕ Nova Disciplina
         </div>
       </div>
     </div>

@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 import "../styles/component_styles/SidebarStats.css";
 
-export default function SidebarStats() {
+export default function SidebarStats({ aberta, setAberta }) {
   const [stats, setStats] = useState({
     finalizadas: 0,
     emProgresso: 0,
     naoIniciadas: 0,
   });
-
-  const [aberta, setAberta] = useState(false); // controla se a sidebar está aberta
 
   useEffect(() => {
     const fetchStats = async () => {

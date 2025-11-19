@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import Modal from "../components/Modal"; // Ajuste o caminho se necessário
+import { FaRegWindowMaximize } from "react-icons/fa"; // Ícone para abrir modal
 import "../styles/Home.css";
 
 export default function Home({ user }) {
   const navigate = useNavigate();
   const [disciplinas, setDisciplinas] = useState([]);
+
+  // Estado do modal genérico
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -37,8 +42,6 @@ export default function Home({ user }) {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          console.log("Mudança detectada:", payload);
-
           if (payload.eventType === "INSERT") {
             setDisciplinas((prev) => [...prev, payload.new]);
           }
@@ -73,6 +76,14 @@ export default function Home({ user }) {
     <div className="home-container">
       <h1>Minhas Disciplinas</h1>
 
+      {/* Ícone do modal genérico */}
+      <div style={{ marginBottom: "20px" }}>
+        <FaRegWindowMaximize
+          style={{ fontSize: "32px", cursor: "pointer" }}
+          onClick={() => setModalOpen(true)}
+        />
+      </div>
+
       <div className="disciplinas-grid">
         {disciplinas.map((disc) => (
           <div
@@ -91,6 +102,13 @@ export default function Home({ user }) {
           ➕ Nova Disciplina
         </div>
       </div>
+
+      {/* Modal genérico */}
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+        <div style={{ padding: "20px", minWidth: "300px", minHeight: "150px" }}>
+          {/* Aqui você adicionará conteúdo futuramente */}
+        </div>
+      </Modal>
     </div>
   );
 }

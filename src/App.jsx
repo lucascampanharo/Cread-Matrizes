@@ -15,13 +15,14 @@ import Header from "./components/header.jsx";
 import SidebarStats from "./components/SidebarStats";
 import Perfil from "./pages/Perfil";
 import Config from "./pages/Config";
+
 import "./styles/App.css";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Novo: estado global para a sidebar
+  // 🔥 Estado global para abrir/fechar a sidebar
   const [sidebarAberta, setSidebarAberta] = useState(false);
 
   useEffect(() => {
@@ -46,12 +47,14 @@ function App() {
 
   return (
     <Router>
-      <div className="layout">
-        {/* 🔥 Sidebar controlada por um estado global */}
+      <div className="app-container">
         <SidebarStats aberta={sidebarAberta} setAberta={setSidebarAberta} />
 
-        <div className="main-content">
-          {/* 🔥 Header também recebe o controle da sidebar, caso queira integrar */}
+        <div
+          className={`main-content ${
+            sidebarAberta ? "sidebar-open" : "sidebar-closed"
+          }`}
+        >
           <Header user={user} />
 
           <Routes>

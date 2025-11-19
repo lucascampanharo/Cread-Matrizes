@@ -5,17 +5,24 @@
   --toggle-offset: 20px;
 }
 
-/* ====== LAYOUT GERAL ====== */
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;
-  margin-left: var(--sidebar-width);
   transition: margin-left 0.35s ease;
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
 }
 
-/* Quando a sidebar está fechada */
-.sidebar-stats.fechada ~ .main-content {
+.main-content.sidebar-open {
+  margin-left: var(--sidebar-width);
+}
+
+.main-content.sidebar-closed {
   margin-left: var(--sidebar-collapsed);
 }

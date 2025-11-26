@@ -14,7 +14,6 @@ import NewDisciplina from "./pages/NewDisciplina";
 import Header from "./components/header.jsx";
 import SidebarStats from "./components/SidebarStats";
 import Perfil from "./pages/Perfil";
-import Config from "./pages/Config";
 
 import "./styles/App.css";
 
@@ -68,7 +67,7 @@ function App() {
               element={<EventStepTracker user={user} />}
             />
             <Route path="/perfil" element={<Perfil user={user} />} />
-            <Route path="/config" element={<Config />} />
+
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

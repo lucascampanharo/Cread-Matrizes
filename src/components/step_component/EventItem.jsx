@@ -1,8 +1,27 @@
 import { supabase } from "../../supabase";
 import StepItem from "../step_component/StepItem.jsx";
 import NewStepForm from "../step_component/NewStepForm.jsx";
+import { useEffect } from "react";
 
-export default function EventItem({ event, steps, setSteps, setEvents }) {
+export default function EventItem({
+  event,
+  steps,
+  setSteps,
+  setEvents,
+  onPrazoVencido, // 🔥 add
+}) {
+  // 🔥 Detecta atraso e avisa o pai
+  useEffect(() => {
+    if (!event?.due_date) return;
+
+    const hoje = new Date();
+    const prazo = new Date(event.due_date);
+
+    if (hoje > prazo) {
+      onPrazoVencido?.(event);
+    }
+  }, [event, onPrazoVencido]);
+
   const percentDone = (steps) =>
     steps.length === 0
       ? 0
@@ -52,7 +71,6 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
           alignItems: "center",
         }}
       >
-        {/* usar o campo que está no banco (events.titulo) */}
         <h2>{event.titulo}</h2>
         <button className="delete" onClick={removeEvento}>
           Remover Evento
@@ -90,7 +108,6 @@ export default function EventItem({ event, steps, setSteps, setEvents }) {
         ))}
       </ul>
 
-      {/* passo steps para NewStepForm para ajudar na detecção de campo */}
       <NewStepForm eventId={event.id} setSteps={setSteps} steps={steps} />
     </div>
   );

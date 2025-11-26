@@ -45,7 +45,7 @@ export default function Header({ user, sidebarAberta }) {
       <nav className="header-nav">
         <Link to="/">Início</Link>
         <Link to="/perfil">Perfil</Link>
-        <button onClick={() => navigate("/config")}>Configurações</button>
+
         <button className="logout-btn" onClick={handleLogout}>
           Sair
         </button>

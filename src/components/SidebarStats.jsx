@@ -13,22 +13,40 @@ export default function SidebarStats({ aberta, setAberta }) {
     const fetchStats = async () => {
       const { data, error } = await supabase.from("steps").select("status");
 
-      if (!error && data) {
-        const total = data.length || 1;
-        const finalizadas = data.filter(
-          (s) => s.status === "Finalizado"
-        ).length;
-        const emProgresso = data.filter(
-          (s) => s.status === "Em Progresso"
-        ).length;
-        const naoIniciadas = total - finalizadas - emProgresso;
-
-        setStats({
-          finalizadas: Math.round((finalizadas / total) * 100),
-          emProgresso: Math.round((emProgresso / total) * 100),
-          naoIniciadas: Math.round((naoIniciadas / total) * 100),
-        });
+      if (error) {
+        console.error("Erro ao buscar stats:", error);
+        return;
       }
+
+      if (!data || data.length === 0) {
+        // Sem dados → tudo 0
+        setStats({
+          finalizadas: 0,
+          emProgresso: 0,
+          naoIniciadas: 100,
+        });
+        return;
+      }
+
+      const total = data.length;
+
+      const finalizadas = data.filter(
+        (s) => s.status?.trim() === "Finalizado"
+      ).length;
+
+      const emProgresso = data.filter(
+        (s) => s.status?.trim() === "Em Progresso"
+      ).length;
+
+      const naoIniciadas = total - finalizadas - emProgresso;
+
+      const percent = (v) => Math.round((v / total) * 100);
+
+      setStats({
+        finalizadas: percent(finalizadas),
+        emProgresso: percent(emProgresso),
+        naoIniciadas: percent(naoIniciadas),
+      });
     };
 
     fetchStats();
@@ -49,8 +67,10 @@ export default function SidebarStats({ aberta, setAberta }) {
             <div className="progress-bar">
               <div
                 className="progress-fill finalizadas"
-                style={{ width: `${stats.finalizadas}%` }}
-              ></div>
+                style={{
+                  width: `${stats.finalizadas}%`,
+                }}
+              />
             </div>
             <span className="percent">{stats.finalizadas}%</span>
           </div>
@@ -60,8 +80,10 @@ export default function SidebarStats({ aberta, setAberta }) {
             <div className="progress-bar">
               <div
                 className="progress-fill progresso"
-                style={{ width: `${stats.emProgresso}%` }}
-              ></div>
+                style={{
+                  width: `${stats.emProgresso}%`,
+                }}
+              />
             </div>
             <span className="percent">{stats.emProgresso}%</span>
           </div>
@@ -71,8 +93,10 @@ export default function SidebarStats({ aberta, setAberta }) {
             <div className="progress-bar">
               <div
                 className="progress-fill pendente"
-                style={{ width: `${stats.naoIniciadas}%` }}
-              ></div>
+                style={{
+                  width: `${stats.naoIniciadas}%`,
+                }}
+              />
             </div>
             <span className="percent">{stats.naoIniciadas}%</span>
           </div>

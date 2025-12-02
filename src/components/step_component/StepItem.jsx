@@ -3,7 +3,6 @@ import { supabase } from "../../supabase";
 const STATUS = ["Não iniciado", "Em progresso", "Finalizado"];
 
 export default function StepItem({ step, eventId, setSteps }) {
-  // label flexível: tenta vários nomes possíveis
   const label =
     step.titulo ??
     step.description ??
@@ -16,43 +15,36 @@ export default function StepItem({ step, eventId, setSteps }) {
     const idx = STATUS.indexOf(step.status);
     const next = STATUS[(idx + 1) % STATUS.length];
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("steps")
       .update({ status: next })
-      .eq("id", step.id)
-      .select();
+      .eq("id", step.id);
 
     if (error) {
       console.error("Erro ao atualizar status:", error.message);
       return;
     }
 
-    if (data) {
-      setSteps((prev) => ({
-        ...prev,
-        [eventId]: prev[eventId].map((s) =>
-          s.id === step.id ? { ...s, status: next } : s
-        ),
-      }));
-    }
+    setSteps((prev) => ({
+      ...prev,
+      [eventId]: prev[eventId].map((s) =>
+        s.id === step.id ? { ...s, status: next } : s
+      ),
+    }));
   };
 
   const removeStep = async () => {
-    const { data, error } = await supabase
-      .from("steps")
-      .delete()
-      .eq("id", step.id)
-      .select();
+    const { error } = await supabase.from("steps").delete().eq("id", step.id);
+
     if (error) {
       console.error("Erro ao remover etapa:", error.message);
       return;
     }
-    if (data) {
-      setSteps((prev) => ({
-        ...prev,
-        [eventId]: prev[eventId].filter((s) => s.id !== step.id),
-      }));
-    }
+
+    setSteps((prev) => ({
+      ...prev,
+      [eventId]: prev[eventId].filter((s) => s.id !== step.id),
+    }));
   };
 
   const updateStepDate = async (newDate) => {
@@ -60,10 +52,12 @@ export default function StepItem({ step, eventId, setSteps }) {
       .from("steps")
       .update({ due_date: newDate })
       .eq("id", step.id);
+
     if (error) {
       console.error("Erro ao atualizar prazo da etapa:", error.message);
       return;
     }
+
     setSteps((prev) => ({
       ...prev,
       [eventId]: prev[eventId].map((s) =>

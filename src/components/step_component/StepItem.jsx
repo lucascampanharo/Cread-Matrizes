@@ -1,13 +1,12 @@
 import { supabase } from "../../supabase";
 
-const STATUS = ["Não iniciado", "Em progresso", "Finalizado"];
+const STATUS = ["Não Iniciado", "Em Progresso", "Finalizado"];
 
 export default function StepItem({ step, eventId, setSteps }) {
   const label =
+    step.nome ??
     step.titulo ??
     step.description ??
-    step.title ??
-    step.nome ??
     step.descricao ??
     "(sem título)";
 
@@ -33,20 +32,6 @@ export default function StepItem({ step, eventId, setSteps }) {
     }));
   };
 
-  const removeStep = async () => {
-    const { error } = await supabase.from("steps").delete().eq("id", step.id);
-
-    if (error) {
-      console.error("Erro ao remover etapa:", error.message);
-      return;
-    }
-
-    setSteps((prev) => ({
-      ...prev,
-      [eventId]: prev[eventId].filter((s) => s.id !== step.id),
-    }));
-  };
-
   const updateStepDate = async (newDate) => {
     const { error } = await supabase
       .from("steps")
@@ -54,7 +39,7 @@ export default function StepItem({ step, eventId, setSteps }) {
       .eq("id", step.id);
 
     if (error) {
-      console.error("Erro ao atualizar prazo da etapa:", error.message);
+      console.error("Erro ao atualizar prazo:", error.message);
       return;
     }
 
@@ -70,42 +55,31 @@ export default function StepItem({ step, eventId, setSteps }) {
     <li className="step-item">
       <span>{label}</span>
 
-      <span style={{ marginLeft: "1rem" }}>
-        Prazo:
-        <input
-          type="date"
-          value={step.due_date || ""}
-          onChange={(ev) => updateStepDate(ev.target.value)}
-          style={{ marginLeft: "0.25rem" }}
-        />
-      </span>
+      <input
+        type="date"
+        value={step.due_date || ""}
+        onChange={(ev) => updateStepDate(ev.target.value)}
+        style={{ marginLeft: "1rem" }}
+      />
 
       <span
+        onClick={changeStatus}
         style={{
+          marginLeft: "1rem",
           cursor: "pointer",
-          padding: "0.25rem 0.5rem",
-          borderRadius: "4px",
           background:
-            step.status === "Não iniciado"
+            step.status === "Não Iniciado"
               ? "#ccc"
-              : step.status === "Em progresso"
+              : step.status === "Em Progresso"
               ? "#fbbf24"
               : "#34d399",
-          color: step.status === "Em progresso" ? "#000" : "#fff",
-          marginLeft: "0.5rem",
+          padding: "0.25rem 0.5rem",
+          borderRadius: "4px",
+          color: step.status === "Em Progresso" ? "#000" : "#fff",
         }}
-        onClick={changeStatus}
       >
         {step.status}
       </span>
-
-      <button
-        className="delete"
-        onClick={removeStep}
-        style={{ marginLeft: "0.5rem" }}
-      >
-        Remover
-      </button>
     </li>
   );
 }

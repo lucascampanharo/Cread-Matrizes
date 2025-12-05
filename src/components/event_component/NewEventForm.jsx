@@ -3,6 +3,7 @@ import { supabase } from "../../supabase";
 
 export default function NewEventForm({ events, setEvents, disciplinaId }) {
   const [novoEvento, setNovoEvento] = useState("");
+  const [linkDrive, setLinkDrive] = useState("");
   const [loading, setLoading] = useState(false);
 
   const addEvento = async () => {
@@ -10,7 +11,6 @@ export default function NewEventForm({ events, setEvents, disciplinaId }) {
 
     setLoading(true);
 
-    // 🔹 Obtém o usuário autenticado
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -21,14 +21,14 @@ export default function NewEventForm({ events, setEvents, disciplinaId }) {
       return;
     }
 
-    // 🔹 Insere evento vinculado ao usuário e à disciplina
     const { data, error } = await supabase
       .from("events")
       .insert([
         {
           titulo: novoEvento.trim(),
           disciplina_id: disciplinaId,
-          user_id: user.id, // 👈 associa o evento ao usuário logado
+          user_id: user.id,
+          link_drive: linkDrive.trim() || null, // 👈 salva link
         },
       ])
       .select();
@@ -44,6 +44,7 @@ export default function NewEventForm({ events, setEvents, disciplinaId }) {
     if (data) {
       setEvents([...events, data[0]]);
       setNovoEvento("");
+      setLinkDrive("");
     }
   };
 
@@ -55,7 +56,20 @@ export default function NewEventForm({ events, setEvents, disciplinaId }) {
         onChange={(e) => setNovoEvento(e.target.value)}
         disabled={loading}
       />
-      <button onClick={addEvento} disabled={loading}>
+
+      <input
+        placeholder="Link para materiais (Drive, OneDrive, etc)"
+        value={linkDrive}
+        onChange={(e) => setLinkDrive(e.target.value)}
+        disabled={loading}
+        style={{ marginLeft: "0.5rem" }}
+      />
+
+      <button
+        onClick={addEvento}
+        disabled={loading}
+        style={{ marginLeft: "0.5rem" }}
+      >
         {loading ? "Adicionando..." : "Adicionar Evento"}
       </button>
     </div>

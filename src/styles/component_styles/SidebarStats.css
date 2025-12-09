@@ -21,7 +21,7 @@
 /* ====== ESTADO FECHADA ====== */
 .sidebar-stats.fechada {
   width: var(--sidebar-collapsed);
-  transform: translateX(-8px);
+  transform: translateX(0px);
   padding: 1rem 0.5rem;
 }
 

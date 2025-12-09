@@ -65,6 +65,9 @@ export default function EventItem({
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       }}
     >
+      {/* =======================
+          CABEÇALHO EVENTO
+      ======================= */}
       <div
         style={{
           display: "flex",
@@ -73,12 +76,40 @@ export default function EventItem({
         }}
       >
         <h2>{event.titulo}</h2>
+
         <button className="delete" onClick={removeEvento}>
           Remover Evento
         </button>
       </div>
 
-      <div style={{ marginTop: "0.5rem" }}>
+      {/* =======================
+          LINK DRIVE (NOVO)
+      ======================= */}
+      {event.link_drive && (
+        <div style={{ marginTop: "0.8rem" }}>
+          <a
+            href={event.link_drive}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: "#007bff",
+              color: "white",
+              padding: "0.4rem 0.8rem",
+              borderRadius: "6px",
+              textDecoration: "none",
+              fontSize: "0.85rem",
+              display: "inline-block",
+            }}
+          >
+            📁 Acessar material
+          </a>
+        </div>
+      )}
+
+      {/* =======================
+          PRAZO
+      ======================= */}
+      <div style={{ marginTop: "0.8rem" }}>
         <label>
           Prazo:
           <input
@@ -90,7 +121,10 @@ export default function EventItem({
         </label>
       </div>
 
-      <div className="progress-bar" style={{ margin: "0.5rem 0" }}>
+      {/* =======================
+          BARRA DE PROGRESSO
+      ======================= */}
+      <div className="progress-bar" style={{ margin: "0.6rem 0" }}>
         <div
           className="progress-fill"
           style={{ width: `${percentDone(steps)}%` }}
@@ -98,6 +132,9 @@ export default function EventItem({
       </div>
       <small>{percentDone(steps)}% concluído</small>
 
+      {/* =======================
+          LISTA DE STEPS
+      ======================= */}
       <ul className="step-list">
         {steps.map((s) => (
           <StepItem
@@ -109,6 +146,9 @@ export default function EventItem({
         ))}
       </ul>
 
+      {/* =======================
+          NOVO STEP
+      ======================= */}
       <NewStepForm eventId={event.id} setSteps={setSteps} steps={steps} />
     </div>
   );
